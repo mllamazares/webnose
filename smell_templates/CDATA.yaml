@@ -1,0 +1,12 @@
+id: CDATA
+info:
+  description: Detects the presence of CDATA sections, which may indicate XML parsing
+    or potential XSS vectors in older browsers.
+  author: sysrekt
+  risk_score: 1.0
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <!\[CDATA\[
+  case_insensitive: true

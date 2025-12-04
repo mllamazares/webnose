@@ -1,0 +1,12 @@
+id: signup
+info:
+  description: Identifies sign-up or registration pages, a key entry point for user
+    enumeration or logic bugs.
+  author: sysrekt
+  risk_score: 3.0
+matchers:
+- type: regex
+  part: all
+  regex:
+  - register|signup|sign_up|create.?account
+  case_insensitive: false

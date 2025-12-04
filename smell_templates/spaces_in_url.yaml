@@ -1,0 +1,12 @@
+id: spaces_in_url
+info:
+  description: Detects spaces in URLs, which is non-standard and might cause parsing
+    issues.
+  author: sysrekt
+  risk_score: 1.0
+matchers:
+- type: regex
+  part: url
+  regex:
+  - =\w*(%20|\s|\+)
+  case_insensitive: true

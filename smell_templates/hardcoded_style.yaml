@@ -1,0 +1,12 @@
+id: hardcoded_style
+info:
+  description: Finds inline 'style=' attributes, which might indicate poor coding
+    practices or injection points.
+  author: sysrekt
+  risk_score: 1.0
+matchers:
+- type: regex
+  part: body
+  regex:
+  - style=
+  case_insensitive: false

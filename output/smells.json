@@ -1,0 +1,41 @@
+[
+  {
+    "url": "http://testphp.vulnweb.com/login.php",
+    "subdomain": "testphp.vulnweb.com",
+    "bounty_smells": {
+      "vintage_DOCTYPE": 1,
+      "vintage_tags": 2,
+      "interesting_tech": 21,
+      "juicy_url": 1,
+      "no_cms": 1,
+      "signup": 3,
+      "hardcoded_style": 6,
+      "smell_count": 7
+    }
+  },
+  {
+    "url": "http://testphp.vulnweb.com/search.php?test=query",
+    "subdomain": "testphp.vulnweb.com",
+    "bounty_smells": {
+      "vintage_DOCTYPE": 1,
+      "interesting_tech": 19,
+      "juicy_url": 2,
+      "get_params": 1,
+      "no_cms": 1,
+      "hardcoded_style": 3,
+      "smell_count": 6
+    }
+  },
+  {
+    "url": "http://testphp.vulnweb.com/",
+    "subdomain": "testphp.vulnweb.com",
+    "bounty_smells": {
+      "vintage_DOCTYPE": 1,
+      "interesting_tech": 18,
+      "juicy_url": 1,
+      "no_cms": 1,
+      "hardcoded_style": 3,
+      "smell_count": 5
+    }
+  }
+]

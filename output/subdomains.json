@@ -1,0 +1,11 @@
+{
+  "subdomains": [
+    {
+      "subdomain": "testphp.vulnweb.com",
+      "risk_score": 42.0,
+      "url_count": 3,
+      "avg_smell": 6.0,
+      "max_smell": 7
+    }
+  ]
+}

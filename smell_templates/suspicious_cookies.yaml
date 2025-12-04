@@ -1,0 +1,12 @@
+id: suspicious_cookies
+info:
+  description: Flags cookies with suspicious names like 'admin', 'debug', 'test',
+    or missing secure flags.
+  author: sysrekt
+  risk_score: 4.0
+matchers:
+- type: regex
+  part: header
+  regex:
+  - Set-Cookie:.*(auth|session|debug|admin|secret|token|jwt|csrf|access)
+  case_insensitive: false

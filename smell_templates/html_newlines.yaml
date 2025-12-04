@@ -1,0 +1,12 @@
+id: html_newlines
+info:
+  description: Detects raw newline characters in HTML, potentially interesting for
+    formatting or injection issues.
+  author: sysrekt
+  risk_score: 1.0
+matchers:
+- type: regex
+  part: body
+  regex:
+  - \n{4,}
+  case_insensitive: true

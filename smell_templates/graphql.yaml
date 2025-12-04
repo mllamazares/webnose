@@ -1,0 +1,12 @@
+id: graphql
+info:
+  description: Detects GraphQL endpoints or error messages, indicating a GraphQL API
+    is in use.
+  author: sysrekt
+  risk_score: 4.0
+matchers:
+- type: regex
+  part: body
+  regex:
+  - graphql
+  case_insensitive: false

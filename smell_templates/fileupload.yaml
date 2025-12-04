@@ -1,0 +1,12 @@
+id: fileupload
+info:
+  description: Identifies file upload forms or inputs, a critical functionality to
+    test for vulnerabilities.
+  author: sysrekt
+  risk_score: 6.0
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <input[^>]*type=[\'"]?file[\'"]?
+  case_insensitive: false

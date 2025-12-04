@@ -1,0 +1,12 @@
+id: dangerous_functions
+info:
+  description: Scans for dangerous JavaScript functions like 'eval()', 'setTimeout()',
+    or 'innerHTML' usage.
+  author: sysrekt
+  risk_score: 5.0
+matchers:
+- type: regex
+  part: body
+  regex:
+  - (eval|Function|setTimeout|setInterval)\((["']|[\w\d_$]+\s*\+)
+  case_insensitive: true

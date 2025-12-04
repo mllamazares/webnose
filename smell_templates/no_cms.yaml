@@ -1,0 +1,14 @@
+id: no_cms
+info:
+  description: Matches when common CMS signatures are ABSENT, suggesting a custom
+    application.
+  author: sysrekt
+  risk_score: 2.0
+matchers:
+- type: regex
+  part: all
+  negative: true
+  regex:
+  - wordpress|optimizely|drupal|moodle|plex|squarespace|liferay|silverstripe|joomla|CMS|adobe
+    aem|shopify|magento|wix|weebly
+  case_insensitive: false

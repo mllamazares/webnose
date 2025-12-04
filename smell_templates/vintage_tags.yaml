@@ -1,0 +1,11 @@
+id: vintage_tags
+info:
+  description: Detects deprecated HTML tags like <marquee>, <blink>, or <font>.
+  author: sysrekt
+  risk_score: 1.0
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <(center|font|marquee|frameset|frame|blink)[ >]
+  case_insensitive: false
