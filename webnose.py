@@ -1,32 +1,45 @@
-#!/usr/bin/env python3
 import os
 import sys
+import json
+import yaml
 import time
 import argparse
-import yaml
-import json
-import re
 import requests
+import re
 import concurrent.futures
+import shutil
+import subprocess
 from urllib.parse import urlparse
 from tqdm import tqdm
 from fake_useragent import UserAgent
-
-# Disable SSL warnings
 import urllib3
+
+# Suppress SSL warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# ASCII Art Banner
-BANNER = r"""
-      _.--.
-    .'   ` '
-     ``'.  .'     .c-..
-        `.  ``````  .-'
-       -'`. )--. .'`
-       `-`._   \_`-- webnose v0.2 
-                     by @sysrekt
-                     https://linkedin.com/in/mllamazares
+BANNER = """
+       |     |
+       |     |
+      /       \\
+     ( __   __ )
+      '--'-;  ;
+     _     |  |
+__ /` ``""-;_ |
+\\ '.;------. `\\      webnose v0.2
+ | |    __..  |        by @sysrekt
+ | \\.-''   _  |       https://mll.sh
+ | |  ,-'-,   |
+ |  \\__.-'    |
+  \\    '.    /
+   \\     \\  /
+    '.      |
+      )     |
 """
+
+DEFAULT_REPO_URL = "https://github.com/mllamazares/webnose.git"
+WEBNOSE_DIR = os.path.expanduser("~/.webnose")
+REPO_DIR = WEBNOSE_DIR
+DEFAULT_TEMPLATES_DIR = os.path.join(REPO_DIR, "smell_templates")
 
 # ANSI Color Codes
 class Colors:
@@ -40,28 +53,78 @@ class Colors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def print_colored(text, color, bold=False):
-    """Print text with color and optional bold formatting."""
-    bold_code = Colors.BOLD if bold else ''
-    print(f"{bold_code}{color}{text}{Colors.ENDC}")
+def print_colored(text, color=Colors.ENDC, bold=False):
+    if bold:
+        print(f"{Colors.BOLD}{color}{text}{Colors.ENDC}", file=sys.stderr)
+    else:
+        print(f"{color}{text}{Colors.ENDC}", file=sys.stderr)
 
-def load_templates(directory):
+def load_templates(templates_dir):
     templates = []
-    if not os.path.exists(directory):
-        print_colored(f"❌ Template directory '{directory}' not found", Colors.RED)
-        sys.exit(1)
+    if not os.path.exists(templates_dir):
+        return templates
         
-    for filename in os.listdir(directory):
+    for filename in os.listdir(templates_dir):
         if filename.endswith(".yaml") or filename.endswith(".yml"):
-            path = os.path.join(directory, filename)
             try:
-                with open(path, 'r') as f:
+                with open(os.path.join(templates_dir, filename), 'r') as f:
                     template = yaml.safe_load(f)
                     if template:
                         templates.append(template)
             except Exception as e:
                 print_colored(f"⚠️ Error loading template {filename}: {e}", Colors.WARNING)
     return templates
+
+def run_command(command, cwd=None):
+    try:
+        subprocess.check_call(command, shell=True, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+def download_templates():
+    # Clean up existing directory to ensure git clone works
+    if os.path.exists(WEBNOSE_DIR):
+        try:
+            shutil.rmtree(WEBNOSE_DIR)
+        except Exception as e:
+            print_colored(f"[-] Failed to clean up {WEBNOSE_DIR}: {e}", Colors.RED)
+            return False
+            
+    os.makedirs(WEBNOSE_DIR, exist_ok=True)
+    
+    print_colored("[*] Cloning templates from GitHub...", Colors.BLUE)
+    # Clone into the directory (it must be empty)
+    # Since we just recreated it, it is empty.
+    # However, git clone <url> <dir> works best if dir doesn't exist or is empty.
+    # We can just remove it and let git create it? 
+    # Actually, shutil.rmtree removed it. os.makedirs created it empty.
+    # git clone into empty dir is fine.
+    
+    if run_command(f"git clone {DEFAULT_REPO_URL} {REPO_DIR}"):
+        print_colored("[+] Templates downloaded successfully!", Colors.GREEN)
+        return True
+    else:
+        print_colored("[-] Failed to download templates.", Colors.RED)
+        return False
+
+def update_templates():
+    if not os.path.exists(REPO_DIR):
+        print_colored("[-] Templates directory not found. Please run normally to download first.", Colors.RED)
+        return
+
+    print_colored("[*] Updating templates...", Colors.BLUE)
+    if run_command("git pull", cwd=REPO_DIR):
+        print_colored("[+] Templates updated successfully!", Colors.GREEN)
+    else:
+        print_colored("[-] Failed to update templates.", Colors.RED)
+
+def update_script():
+    print_colored("[*] Updating webnose script...", Colors.BLUE)
+    if run_command("git pull"):
+        print_colored("[+] Script updated successfully!", Colors.GREEN)
+    else:
+        print_colored("[-] Failed to update script.", Colors.RED)
 
 def extract_subdomain(url):
     parsed = urlparse(url)
@@ -75,15 +138,19 @@ def extract_subdomain(url):
         return netloc
     return netloc
 
-def fetch_url(url, timeout=10, random_agent=False):
+def fetch_url(url, timeout=10, ua_strategy=None):
     try:
-        ua_string = 'Mozilla/5.0 (compatible; webnose/0.2; +https://github.com/sysrekt/webnose)'
-        if random_agent:
-            try:
-                ua = UserAgent()
-                ua_string = ua.random
-            except Exception:
-                pass # Fallback to default if generation fails
+        ua_string = 'Mozilla/5.0 (compatible; webnose/0.2)'
+        
+        if ua_strategy:
+            if ua_strategy.get('custom'):
+                ua_string = ua_strategy['custom']
+            elif ua_strategy.get('random'):
+                try:
+                    ua = UserAgent()
+                    ua_string = ua.random
+                except Exception:
+                    pass # Fallback to default
         
         headers = {
             'User-Agent': ua_string
@@ -154,9 +221,9 @@ def count_smell_instances(content, template):
             
     return total_count
 
-def analyze_target(url, templates, timeout, random_agent):
+def analyze_target(url, templates, timeout, ua_strategy):
     # Fetch
-    data = fetch_url(url, timeout, random_agent)
+    data = fetch_url(url, timeout, ua_strategy)
     if data.get('error'):
         return {
             'url': url,
@@ -187,7 +254,7 @@ def analyze_target(url, templates, timeout, random_agent):
         'smells': detected_smells
     }
 
-def generate_reports(entries, output_file, topn):
+def generate_reports(entries, output_file, topn, silent=False):
     # Filter and Sort
     valid_entries = [e for e in entries if not e.get('error')]
     sorted_entries = sorted(valid_entries, key=lambda x: x.get('risk_score', 0), reverse=True)
@@ -231,52 +298,132 @@ def generate_reports(entries, output_file, topn):
         'urls': sorted_entries
     }
     
-    try:
-        with open(output_file, 'w') as f:
-            json.dump(report, f, indent=2)
-        print_colored(f"\n[+] Report written to {output_file}", Colors.GREEN)
-    except Exception as e:
-        print_colored(f"[-] Error writing report: {e}", Colors.RED)
+    if output_file:
+        try:
+            with open(output_file, 'w') as f:
+                json.dump(report, f, indent=2)
+            if not silent:
+                print_colored(f"\n[+] Report written to {output_file}", Colors.GREEN)
+        except Exception as e:
+            if not silent:
+                print_colored(f"[-] Error writing report: {e}", Colors.RED)
+    else:
+        # Print to stdout
+        print(json.dumps(report, indent=2))
+
+    # Console Summary (only if not silent and output file was used)
+    if not silent and output_file and sorted_entries:
+        print_colored("\n🦨 Top Risky URLs:", Colors.WARNING, bold=True)
+        print(f"{'URL':<60} {'Risk':<10} {'Smells':<10}")
+        print("-" * 80)
+        for entry in sorted_entries[:topn]:
+            url = entry['url']
+            if len(url) > 58: url = url[:55] + "..."
+            print(f"{url:<60} {entry['risk_score']:<10} {entry['smell_count']:<10}")
 
 
 def main():
-    print(BANNER)
-    parser = argparse.ArgumentParser(description="Webnose v0.2 - Modular Web Smells Scanner")
-    parser.add_argument("-i", "--input", required=True, help="File containing list of URLs")
-    parser.add_argument("-t", "--templates", default="smells_templates", help="Directory containing smell templates")
-    parser.add_argument("-o", "--output", default="webnose_report.json", help="Output JSON report file")
-    parser.add_argument("-w", "--workers", type=int, default=10, help="Number of concurrent workers")
+    parser = argparse.ArgumentParser(description="Webnose v0.2 - Modular Web Smells Scanner", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-i", "--input", help="File containing list of URLs")
+    parser.add_argument("-t", "--templates", help=f"Directory containing smell templates (default: {DEFAULT_TEMPLATES_DIR})")
+    parser.add_argument("-o", "--output", help="Output JSON report file")
+    parser.add_argument("-c", "--concurrency", type=int, default=10, help="Number of concurrent workers")
     parser.add_argument("--timeout", type=int, default=10, help="HTTP request timeout")
     parser.add_argument("--random-agent", action="store_true", help="Use random User-Agent")
+    parser.add_argument("--user-agent", help="Custom User-Agent string")
+    parser.add_argument("-s", "--silent", action="store_true", help="Suppress output")
+    parser.add_argument("-ut", "--update-templates", action="store_true", help="Update smell templates from GitHub")
+    parser.add_argument("-up", "--update-program", action="store_true", help="Update webnose script from GitHub")
     args = parser.parse_args()
 
+    if not args.silent:
+        print(BANNER, file=sys.stderr)
+
+    # Handle Updates
+    if args.update_templates:
+        update_templates()
+        sys.exit(0)
+    
+    if args.update_program:
+        update_script()
+        sys.exit(0)
+
+    # Determine Templates Directory
+    templates_dir = args.templates
+    if not templates_dir:
+        # Check if default exists
+        if os.path.exists(DEFAULT_TEMPLATES_DIR):
+            templates_dir = DEFAULT_TEMPLATES_DIR
+        else:
+            # Prompt to download
+            if not args.silent:
+                print_colored("[!] Templates not found in default location.", Colors.WARNING)
+                try:
+                    choice = input(f"{Colors.WARNING}    Would you like to download them to {WEBNOSE_DIR}? [Y/n] {Colors.ENDC}")
+                except EOFError:
+                    choice = 'n' # Default to no if non-interactive
+                
+                if choice.lower() in ['', 'y', 'yes']:
+                    if download_templates():
+                        templates_dir = DEFAULT_TEMPLATES_DIR
+                    else:
+                        sys.exit(1)
+                else:
+                    print_colored("[-] No templates provided. Exiting.", Colors.RED)
+                    sys.exit(1)
+            else:
+                # In silent mode, we can't prompt, so we fail if not found
+                print_colored("[-] Templates not found and silent mode enabled.", Colors.RED)
+                sys.exit(1)
+
     # Load Templates
-    print_colored(f"[+] Loading templates from {args.templates}...", Colors.BLUE)
-    templates = load_templates(args.templates)
-    print_colored(f"[+] Loaded {len(templates)} templates", Colors.CYAN)
+    if not args.silent:
+        print_colored(f"[+] Loading templates from {templates_dir}...", Colors.BLUE)
+    templates = load_templates(templates_dir)
+    if not args.silent:
+        print_colored(f"[+] Loaded {len(templates)} templates", Colors.CYAN)
 
     # Load URLs
+    urls = []
     try:
-        with open(args.input, 'r') as f:
-            urls = [line.strip() for line in f if line.strip()]
+        if args.input:
+            with open(args.input, 'r') as f:
+                urls = [line.strip() for line in f if line.strip()]
+        elif not sys.stdin.isatty():
+            urls = [line.strip() for line in sys.stdin if line.strip()]
+        else:
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
-        print_colored(f"[-] Error reading input file: {e}", Colors.RED)
+        if not args.silent:
+            print_colored(f"[-] Error reading input: {e}", Colors.RED)
         sys.exit(1)
         
-    print_colored(f"[+] Loaded {len(urls)} URLs to analyze", Colors.CYAN)
+    if not args.silent:
+        print_colored(f"[+] Loaded {len(urls)} URLs to analyze", Colors.CYAN)
     
     # Analyze
     results = []
-    print_colored(f"[+] Starting analysis with {args.workers} workers...\n", Colors.BLUE, bold=True)
+    if not args.silent:
+        print_colored(f"[+] Starting analysis with {args.concurrency} workers...\n", Colors.BLUE, bold=True)
     
-    with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
-        futures = {executor.submit(analyze_target, url, templates, args.timeout, args.random_agent): url for url in urls}
-        for future in tqdm(concurrent.futures.as_completed(futures), total=len(urls), unit="url"):
-            results.append(future.result())
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.concurrency) as executor:
+        # Determine UA strategy
+        ua_strategy = {'random': args.random_agent, 'custom': args.user_agent}
+        
+        futures = {executor.submit(analyze_target, url, templates, args.timeout, ua_strategy): url for url in urls}
+        
+        if args.silent:
+            for future in concurrent.futures.as_completed(futures):
+                results.append(future.result())
+        else:
+            for future in tqdm(concurrent.futures.as_completed(futures), total=len(urls), unit="url"):
+                results.append(future.result())
             
     # Generate Reports
-    generate_reports(results, args.output, 10)
-    print_colored("[+] Analysis completed", Colors.GREEN, bold=True)
+    generate_reports(results, args.output, 10, args.silent)
+    if not args.silent:
+        print_colored("[+] Analysis completed", Colors.GREEN, bold=True)
 
 if __name__ == "__main__":
     main()

@@ -36,23 +36,42 @@ pipx install git+https://github.com/mllamazares/webnose.git
 ## Usage
 
 ```bash
-webnose -i urls.txt [options]
+webnose [options]
 ```
 
 ### Options
 
--   `-i, --input <file>`: File containing list of URLs to scan (required).
--   `-t, --templates <dir>`: Directory containing smell templates (default: `smell_templates`).
--   `-o, --output <file>`: Output JSON report file (default: `webnose_report.json`).
--   `-w, --workers <int>`: Number of concurrent workers (default: 10).
+-   `-i, --input <file>`: File containing list of URLs (optional, reads from stdin if omitted).
+-   `-t, --templates <dir>`: Directory containing smell templates (default: `~/.webnose/repo/smell_templates`).
+-   `-o, --output <file>`: Output JSON report file (optional, prints to stdout if omitted).
+-   `-c, --concurrency <int>`: Number of concurrent workers (default: 10).
 -   `--timeout <int>`: HTTP request timeout in seconds (default: 10).
--   `--random-agent`: Use a random User-Agent string for requests.
+-   `--random-agent`: Use a random User-Agent string.
+-   `--user-agent <string>`: Use a custom User-Agent string.
+-   `-s, --silent`: Suppress banners and logs (JSON output only).
+-   `-ut, --update-templates`: Update smell templates from GitHub.
+-   `-up, --update-program`: Update webnose script from GitHub.
 
-### Example
+### Examples
 
+**Basic Scan:**
 ```bash
-webnose -i targets.txt -w 20 --random-agent -o report.json
+webnose -i targets.txt -c 20 -o report.json
 ```
+
+**Pipe Input & Silent Output:**
+```bash
+cat targets.txt | webnose -s > report.json
+```
+
+**Update Templates:**
+```bash
+webnose -ut
+```
+
+## Template Management
+
+By default, `webnose` looks for templates in `~/.webnose/repo/smell_templates`. If not found, it will prompt you to download them automatically. You can update them at any time using the `-ut` flag.
 
 ## Creating Templates
 

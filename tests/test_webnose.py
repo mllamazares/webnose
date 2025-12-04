@@ -41,7 +41,7 @@ def test_analyze_target_success(mock_response):
     }]
     
     with patch('requests.get', return_value=mock_response):
-        result = webnose.analyze_target("http://example.com", templates, 10, False)
+        result = webnose.analyze_target("http://example.com", templates, 10, {})
         assert result['smells']['test_smell'] == 1
         assert result['smell_count'] == 1
         assert result['risk_score'] == 5.0
@@ -49,7 +49,7 @@ def test_analyze_target_success(mock_response):
 def test_analyze_target_error():
     templates = []
     with patch('requests.get', side_effect=Exception("Fail")):
-        result = webnose.analyze_target("http://example.com", templates, 10, False)
+        result = webnose.analyze_target("http://example.com", templates, 10, {})
         assert result['error'] == "Fail"
         assert result['smell_count'] == 0
         assert result['risk_score'] == 0.0
@@ -61,7 +61,7 @@ def test_random_user_agent():
         mock_ua_instance = MockUA.return_value
         mock_ua_instance.random = "TestAgent/1.0"
         
-        result = webnose.fetch_url("http://example.com", random_agent=True)
+        result = webnose.fetch_url("http://example.com", ua_strategy={'random': True})
         
         if mock_get.call_args is None:
             pytest.fail(f"requests.get was not called. Result: {result}")
@@ -69,6 +69,14 @@ def test_random_user_agent():
         call_args = mock_get.call_args
         headers = call_args[1]['headers']
         assert headers['User-Agent'] == "TestAgent/1.0"
+
+def test_custom_user_agent():
+    with patch('requests.get') as mock_get:
+        webnose.fetch_url("http://example.com", ua_strategy={'custom': 'MyCustomUA'})
+        
+        call_args = mock_get.call_args
+        headers = call_args[1]['headers']
+        assert headers['User-Agent'] == "MyCustomUA"
 
 def test_integration_empty_output_debug(tmp_path):
     # Create a dummy input file
@@ -89,7 +97,7 @@ def test_integration_empty_output_debug(tmp_path):
         # We can't easily call main() because it parses args.
         # Let's call analyze_target directly and check result.
         templates = webnose.load_templates(str(templates_dir))
-        result = webnose.analyze_target("http://example.com", templates, 10, False)
+        result = webnose.analyze_target("http://example.com", templates, 10, {})
         
         assert result.get('error') is None
         assert result['smell_count'] > 0
