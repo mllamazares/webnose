@@ -1,6 +1,6 @@
-# Webnose
+# 👃 webnose
 
-**Webnose** is a modular, concurrent web scanner designed to sniff out "smells" (security characteristics, interesting tech, or potential vulnerabilities) in web applications. It uses a flexible YAML-based template system to define checks, making it easy to extend and customize.
+**webnose** is a modular, concurrent web scanner designed to sniff out "smells" (security characteristics, interesting tech, or potential vulnerabilities) in web applications. It uses a flexible YAML-based template system to define checks, making it easy to extend and customize.
 
 ## Features
 
@@ -13,15 +13,6 @@
 
 ## Installation
 
-### Using pipx (Recommended)
-
-To install `webnose` in an isolated environment and make it available globally:
-
-```bash
-pipx install git+https://github.com/mllamazares/webnose.git
-```
-
-### From Source
 Ensure you have Go installed (1.21+).
 
 ```bash
