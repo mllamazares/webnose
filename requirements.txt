@@ -1,4 +1,0 @@
-requests
-PyYAML
-tqdm
-fake-useragent

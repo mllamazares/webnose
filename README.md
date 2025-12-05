@@ -22,35 +22,42 @@ pipx install git+https://github.com/mllamazares/webnose.git
 ```
 
 ### From Source
+Ensure you have Go installed (1.21+).
 
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/mllamazares/webnose.git
-    cd webnose
-    ```
-2.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+go install github.com/mllamazares/webnose@latest
+```
 
 ## Usage
 
 ```bash
-webnose [options]
+# Scan a single URL
+webnose -t http://example.com
+
+# Scan a list of URLs from a file
+webnose -t urls.txt
+
+# Scan a list of domains (auto-adds https/http)
+webnose -t domains.txt
+
+# Filter by tags
+webnose -t urls.txt --tags security,legacy
+
+# Save output to JSON
+webnose -t urls.txt -o report.json
 ```
 
 ### Options
 
--   `-i, --input <file>`: File containing list of URLs (optional, reads from stdin if omitted).
--   `-t, --templates <dir>`: Directory containing smell templates (default: `~/.webnose/repo/smell_templates`).
--   `-o, --output <file>`: Output JSON report file (optional, prints to stdout if omitted).
--   `-c, --concurrency <int>`: Number of concurrent workers (default: 10).
--   `--timeout <int>`: HTTP request timeout in seconds (default: 10).
--   `--random-agent`: Use a random User-Agent string.
--   `--user-agent <string>`: Use a custom User-Agent string.
--   `-s, --silent`: Suppress banners and logs (JSON output only).
--   `-ut, --update-templates`: Update smell templates from GitHub.
--   `-up, --update-program`: Update webnose script from GitHub.
+| Flag | Description | Default |
+|------|-------------|---------|
+| `-t` | Target URL or file containing targets | (Required) |
+| `-o` | Output JSON report file | stdout |
+| `-c` | Number of concurrent workers | 10 |
+| `--timeout` | HTTP request timeout (seconds) | 4 |
+| `--tags` | Filter templates by tags (comma-separated) | All |
+| `--templates-dir` | Directory containing smell templates | `~/.webnose/smell_templates` |
+| `-s` | Silent mode (suppress logs) | False |
 
 ### Examples
 
