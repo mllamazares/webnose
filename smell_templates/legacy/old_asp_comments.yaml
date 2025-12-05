@@ -1,0 +1,14 @@
+info:
+  description: Detects <%-- ... --%> ASP.NET WebForms comment blocks, hinting at old
+    server-side templates.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <%--.*?--%>
+  case_insensitive: true
+id: old_asp_comments

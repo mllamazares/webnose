@@ -1,0 +1,14 @@
+id: get_params
+info:
+  description: Detects URLs with GET parameters, which are primary injection points
+    for SQLi, XSS, etc.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - tech
+matchers:
+- type: regex
+  part: url
+  regex:
+  - \?.*=
+  case_insensitive: true

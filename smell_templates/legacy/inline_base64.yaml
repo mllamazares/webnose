@@ -1,0 +1,13 @@
+info:
+  description: Flags large base64 blobs embedded in HTML or JS.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - data:[a-z]+/[a-z]+;base64,[a-zA-Z0-9+/]{50,}
+  case_insensitive: true
+id: inline_base64

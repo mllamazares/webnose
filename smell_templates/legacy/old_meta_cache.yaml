@@ -1,0 +1,14 @@
+info:
+  description: Flags meta HTTP-EQUIV cache-control tags that were used as a workaround
+    before proper cache headers.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - http-equiv=[\"']?Cache-Control[\"']?
+  case_insensitive: true
+id: old_meta_cache

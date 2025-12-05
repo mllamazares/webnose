@@ -1,0 +1,19 @@
+info:
+  description: Detects forms lacking CSRF tokens.
+  author: sysrekt
+  risk_score: 4.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <form
+  case_insensitive: true
+- type: regex
+  part: body
+  regex:
+  - (csrf|token|authenticity)
+  case_insensitive: true
+  negative: true
+id: no_csrf_token

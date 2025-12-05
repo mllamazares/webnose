@@ -1,0 +1,13 @@
+info:
+  description: Detects forms submitting over HTTP.
+  author: sysrekt
+  risk_score: 4.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <form[^>]*action=[\"']http://
+  case_insensitive: true
+id: unencrypted_form

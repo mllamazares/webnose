@@ -1,0 +1,13 @@
+info:
+  description: Detects target=_blank without rel=noopener.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: body
+  regex:
+  - target=[\"']_blank[\"'](?!.*rel=[\"']noopener[\"'])
+  case_insensitive: true
+id: target_blank_no_rel

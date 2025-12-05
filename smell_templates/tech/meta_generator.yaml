@@ -1,0 +1,13 @@
+info:
+  description: Detects meta generator tags revealing outdated CMS versions.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - tech
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <meta name=[\"']generator[\"'] content=
+  case_insensitive: true
+id: meta_generator

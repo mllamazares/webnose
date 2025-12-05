@@ -1,0 +1,13 @@
+info:
+  description: Flags comments leaking TODOs, debug notes, or internal paths.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <!--.*?(TODO|FIXME|DEBUG|XXX|NOTE|HACK).*?-->
+  case_insensitive: true
+id: hidden_comments

@@ -1,0 +1,13 @@
+info:
+  description: Detects PHP warning or notice strings that surface in old deployments.
+  author: sysrekt
+  risk_score: 4.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: body
+  regex:
+  - (Fatal error:|Warning:|Parse error:|Notice:|Uncaught Error:)
+  case_insensitive: true
+id: php_errors

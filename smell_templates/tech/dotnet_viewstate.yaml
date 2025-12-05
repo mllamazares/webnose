@@ -1,0 +1,13 @@
+info:
+  description: Detects __VIEWSTATE or __EVENTVALIDATION fields.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - tech
+matchers:
+- type: regex
+  part: body
+  regex:
+  - (__VIEWSTATE|__EVENTVALIDATION)
+  case_insensitive: false
+id: dotnet_viewstate

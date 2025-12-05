@@ -1,0 +1,14 @@
+info:
+  description: Detects outdated input types like input type="button" without attributes
+    normally required in modern HTML5.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <input[^>]+type=[\"']?button[\"']?
+  case_insensitive: true
+id: non_html5_input_types

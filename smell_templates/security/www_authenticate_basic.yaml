@@ -1,0 +1,13 @@
+info:
+  description: Detects HTTP Basic Authentication prompts.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: header
+  regex:
+  - WWW-Authenticate:\s*Basic
+  case_insensitive: true
+id: www_authenticate_basic

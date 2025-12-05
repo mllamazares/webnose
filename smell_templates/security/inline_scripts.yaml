@@ -1,0 +1,13 @@
+info:
+  description: Flags inline script tags lacking nonce or hash.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <script(?!.*src=)[^>]*>
+  case_insensitive: true
+id: inline_scripts

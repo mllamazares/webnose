@@ -1,0 +1,14 @@
+id: huge_content_length
+info:
+  description: Flags responses with unusually large Content-Length, which might be
+    data leaks or large assets.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: header
+  regex:
+  - Content\-Length:\s*[1-9][0-9]{5,}
+  case_insensitive: false

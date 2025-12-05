@@ -1,0 +1,14 @@
+info:
+  description: Flags usage of X-UA-Compatible or old HTTP-EQUIV directives related
+    to IE mode forcing.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - http-equiv=[\"']?X-UA-Compatible[\"']?
+  case_insensitive: true
+id: legacy_mime_sniff

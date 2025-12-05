@@ -94,12 +94,6 @@ def download_templates():
     os.makedirs(WEBNOSE_DIR, exist_ok=True)
     
     print_colored("[*] Cloning templates from GitHub...", Colors.BLUE)
-    # Clone into the directory (it must be empty)
-    # Since we just recreated it, it is empty.
-    # However, git clone <url> <dir> works best if dir doesn't exist or is empty.
-    # We can just remove it and let git create it? 
-    # Actually, shutil.rmtree removed it. os.makedirs created it empty.
-    # git clone into empty dir is fine.
     
     if run_command(f"git clone {DEFAULT_REPO_URL} {REPO_DIR}"):
         print_colored("[+] Templates downloaded successfully!", Colors.GREEN)
@@ -140,17 +134,30 @@ def extract_subdomain(url):
 
 def fetch_url(url, timeout=10, ua_strategy=None):
     try:
-        ua_string = 'Mozilla/5.0 (compatible; webnose/0.2)'
+        ua_string = ""
         
-        if ua_strategy:
-            if ua_strategy.get('custom'):
-                ua_string = ua_strategy['custom']
-            elif ua_strategy.get('random'):
-                try:
-                    ua = UserAgent()
-                    ua_string = ua.random
-                except Exception:
-                    pass # Fallback to default
+        # Default to random if no strategy or empty strategy
+        if not ua_strategy:
+            try:
+                ua = UserAgent()
+                ua_string = ua.random
+            except Exception:
+                ua_string = 'Mozilla/5.0 (compatible; webnose/0.2)'
+        elif ua_strategy.get('custom'):
+            ua_string = ua_strategy['custom']
+        elif ua_strategy.get('random'):
+            try:
+                ua = UserAgent()
+                ua_string = ua.random
+            except Exception:
+                ua_string = 'Mozilla/5.0 (compatible; webnose/0.2)'
+        else:
+             # Fallback if strategy dict exists but is empty/false
+            try:
+                ua = UserAgent()
+                ua_string = ua.random
+            except Exception:
+                ua_string = 'Mozilla/5.0 (compatible; webnose/0.2)'
         
         headers = {
             'User-Agent': ua_string
@@ -244,7 +251,7 @@ def analyze_target(url, templates, timeout, ua_strategy):
         if count > 0:
             detected_smells[smell_id] = count
             risk = template.get('info', {}).get('risk_score', 0.0)
-            total_risk += (count * float(risk))
+            total_risk += float(risk)
             
     return {
         'url': url,
@@ -257,6 +264,7 @@ def analyze_target(url, templates, timeout, ua_strategy):
 def generate_reports(entries, output_file, topn, silent=False):
     # Filter and Sort
     valid_entries = [e for e in entries if not e.get('error')]
+    # Sort URLs by risk score (descending)
     sorted_entries = sorted(valid_entries, key=lambda x: x.get('risk_score', 0), reverse=True)
     
     # Subdomain Aggregation
@@ -292,9 +300,12 @@ def generate_reports(entries, output_file, topn, silent=False):
             'total_smells': stats['total_smells']
         }
 
+    # Sort Subdomains by risk score (descending)
+    sorted_subdomains = dict(sorted(formatted_subdomains.items(), key=lambda item: item[1]['risk_score'], reverse=True))
+
     # Final Report Structure
     report = {
-        'subdomains': formatted_subdomains,
+        'subdomains': sorted_subdomains,
         'urls': sorted_entries
     }
     
@@ -311,16 +322,35 @@ def generate_reports(entries, output_file, topn, silent=False):
         # Print to stdout
         print(json.dumps(report, indent=2))
 
-    # Console Summary (only if not silent and output file was used)
-    if not silent and output_file and sorted_entries:
-        print_colored("\n🦨 Top Risky URLs:", Colors.WARNING, bold=True)
-        print(f"{'URL':<60} {'Risk':<10} {'Smells':<10}")
-        print("-" * 80)
-        for entry in sorted_entries[:topn]:
-            url = entry['url']
-            if len(url) > 58: url = url[:55] + "..."
-            print(f"{url:<60} {entry['risk_score']:<10} {entry['smell_count']:<10}")
+def load_templates(templates_dir, tags=None):
+    templates = []
+    if not os.path.exists(templates_dir):
+        return templates
+        
+    # Normalize tags
+    target_tags = set()
+    if tags:
+        target_tags = set(t.strip().lower() for t in tags.split(','))
 
+    for root, dirs, files in os.walk(templates_dir):
+        for filename in files:
+            if filename.endswith(('.yaml', '.yml')):
+                filepath = os.path.join(root, filename)
+                try:
+                    with open(filepath, 'r') as f:
+                        template = yaml.safe_load(f)
+                        if template:
+                            # Filter by tags if specified
+                            if target_tags:
+                                template_tags = set(t.lower() for t in template.get('info', {}).get('tags', []))
+                                if not target_tags.intersection(template_tags):
+                                    continue
+                                    
+                            template['id'] = template.get('id', os.path.splitext(filename)[0])
+                            templates.append(template)
+                except Exception as e:
+                    print_colored(f"[-] Error loading template {filename}: {e}", Colors.RED)
+    return templates
 
 def main():
     parser = argparse.ArgumentParser(description="Webnose v0.2 - Modular Web Smells Scanner", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -328,25 +358,32 @@ def main():
     parser.add_argument("-t", "--templates", help=f"Directory containing smell templates (default: {DEFAULT_TEMPLATES_DIR})")
     parser.add_argument("-o", "--output", help="Output JSON report file")
     parser.add_argument("-c", "--concurrency", type=int, default=10, help="Number of concurrent workers")
-    parser.add_argument("--timeout", type=int, default=10, help="HTTP request timeout")
+    parser.add_argument("--timeout", type=int, default=4, help="HTTP request timeout")
     parser.add_argument("--random-agent", action="store_true", help="Use random User-Agent")
     parser.add_argument("--user-agent", help="Custom User-Agent string")
     parser.add_argument("-s", "--silent", action="store_true", help="Suppress output")
     parser.add_argument("-ut", "--update-templates", action="store_true", help="Update smell templates from GitHub")
     parser.add_argument("-up", "--update-program", action="store_true", help="Update webnose script from GitHub")
+    parser.add_argument("--tags", help="Filter templates by tags (comma-separated, e.g., 'security,legacy')")
+    
     args = parser.parse_args()
 
+    # Silent Mode
     if not args.silent:
+        # Print Banner to stderr
         print(BANNER, file=sys.stderr)
 
-    # Handle Updates
-    if args.update_templates:
-        update_templates()
-        sys.exit(0)
-    
+    # Update Program
     if args.update_program:
-        update_script()
+        update_program()
         sys.exit(0)
+
+    # Update Templates
+    if args.update_templates:
+        if download_templates():
+            sys.exit(0)
+        else:
+            sys.exit(1)
 
     # Determine Templates Directory
     templates_dir = args.templates
@@ -355,33 +392,30 @@ def main():
         if os.path.exists(DEFAULT_TEMPLATES_DIR):
             templates_dir = DEFAULT_TEMPLATES_DIR
         else:
-            # Prompt to download
+            # Auto-download if missing
             if not args.silent:
-                print_colored("[!] Templates not found in default location.", Colors.WARNING)
-                try:
-                    choice = input(f"{Colors.WARNING}    Would you like to download them to {WEBNOSE_DIR}? [Y/n] {Colors.ENDC}")
-                except EOFError:
-                    choice = 'n' # Default to no if non-interactive
-                
-                if choice.lower() in ['', 'y', 'yes']:
-                    if download_templates():
-                        templates_dir = DEFAULT_TEMPLATES_DIR
-                    else:
-                        sys.exit(1)
-                else:
-                    print_colored("[-] No templates provided. Exiting.", Colors.RED)
-                    sys.exit(1)
+                print_colored("[!] Templates not found. Downloading...", Colors.WARNING)
+            
+            if download_templates():
+                templates_dir = DEFAULT_TEMPLATES_DIR
             else:
-                # In silent mode, we can't prompt, so we fail if not found
-                print_colored("[-] Templates not found and silent mode enabled.", Colors.RED)
+                if not args.silent:
+                    print_colored("[-] Failed to download templates. Exiting.", Colors.RED)
                 sys.exit(1)
 
     # Load Templates
     if not args.silent:
         print_colored(f"[+] Loading templates from {templates_dir}...", Colors.BLUE)
-    templates = load_templates(templates_dir)
+    
+    templates = load_templates(templates_dir, args.tags)
+    
+    if not templates:
+        if not args.silent:
+            print_colored("[-] No templates found!", Colors.RED)
+        sys.exit(1)
+        
     if not args.silent:
-        print_colored(f"[+] Loaded {len(templates)} templates", Colors.CYAN)
+        print_colored(f"[+] Loaded {len(templates)} templates", Colors.GREEN)
 
     # Load URLs
     urls = []

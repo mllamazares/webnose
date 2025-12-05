@@ -1,0 +1,13 @@
+info:
+  description: Detects outdated jQuery versions.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - jquery-[1-2]\.\d+(\.\d+)?(\.min)?\.js
+  case_insensitive: true
+id: jquery_old_version

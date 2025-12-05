@@ -1,0 +1,13 @@
+info:
+  description: Detects Java applet tags.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <applet\b
+  case_insensitive: true
+id: applet_tag

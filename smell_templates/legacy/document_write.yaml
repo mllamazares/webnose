@@ -1,0 +1,13 @@
+info:
+  description: Detects document.write usage.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - document\.write
+  case_insensitive: true
+id: document_write

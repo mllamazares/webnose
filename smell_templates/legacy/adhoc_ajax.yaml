@@ -1,0 +1,14 @@
+id: adhoc_ajax
+info:
+  description: Finds ad-hoc AJAX requests (XMLHttpRequest) constructed in scripts,
+    often interesting for API discovery.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - \.(ajax|get|post|MLHttpRequest|fetch)\(['"]?[^'"{}]+['"]?
+  case_insensitive: true

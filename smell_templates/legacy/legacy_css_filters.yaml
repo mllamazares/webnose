@@ -1,0 +1,14 @@
+info:
+  description: Detects old CSS filter syntax like filter:alpha(opacity=...), used
+    mostly for IE6 to IE8 hacks.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - filter:\s*alpha\(opacity=
+  case_insensitive: true
+id: legacy_css_filters

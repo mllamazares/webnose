@@ -1,0 +1,13 @@
+info:
+  description: Identifies incorrect MIME types returned by older servers.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: header
+  regex:
+  - 'Content-Type: (?!text/|application/|image/|multipart/|font/|audio/|video/)'
+  case_insensitive: true
+id: weird_mime

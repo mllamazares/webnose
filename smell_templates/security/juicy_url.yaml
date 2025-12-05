@@ -1,0 +1,14 @@
+id: juicy_url
+info:
+  description: Flags URLs containing keywords like 'admin', 'config', 'backup', 'test',
+    etc.
+  author: sysrekt
+  risk_score: 4.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: url
+  regex:
+  - beta|dev|admin|mobile|secret|staging|dashboard|register|upload|test|portal|backup|console|api|intranet|private|confidential|manager|control|debug|root|=https?://
+  case_insensitive: false

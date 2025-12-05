@@ -1,0 +1,13 @@
+info:
+  description: Detects old jQuery UI assets tied to legacy widgets.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - jquery-ui
+  case_insensitive: true
+id: jquery_ui

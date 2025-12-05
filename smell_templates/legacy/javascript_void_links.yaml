@@ -1,0 +1,14 @@
+info:
+  description: Detects anchors using javascript:void(0) patterns that often indicate
+    ancient UI patterns or placeholder links.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - href=[\"']?javascript:void\(0\)[\"']?
+  case_insensitive: true
+id: javascript_void_links

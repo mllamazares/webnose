@@ -1,0 +1,14 @@
+id: interesting_attrs
+info:
+  description: Scans for interesting HTML attributes like 'data-*', 'hidden', or custom
+    attributes.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - tech
+matchers:
+- type: regex
+  part: body
+  regex:
+  - '["'']\/(admin|internal|beta|debug|test|dev)[^"'']*["'']'
+  case_insensitive: false

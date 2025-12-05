@@ -1,0 +1,13 @@
+info:
+  description: Detects layout built with nested tables.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <table
+  case_insensitive: true
+id: table_layout

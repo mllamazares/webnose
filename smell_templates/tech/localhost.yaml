@@ -1,0 +1,14 @@
+id: localhost
+info:
+  description: Detects references to 'localhost' or '127.0.0.1', potentially leaking
+    internal dev environment details.
+  author: sysrekt
+  risk_score: 5.0
+  tags:
+  - tech
+matchers:
+- type: regex
+  part: body
+  regex:
+  - //(localhost|127\.0\.0\.1)
+  case_insensitive: false

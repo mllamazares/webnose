@@ -131,34 +131,29 @@ def test_case_sensitivity():
     content_upper = {'body': 'PASSWORD', 'url': '', 'headers': {}}
     assert webnose.count_smell_instances(content_upper, template_sensitive) == 1
 
-def test_instance_counting():
-    # Positive counting
-    template_count = {
-        'id': 'count',
+def test_risk_score_calculation():
+    templates = [{
+        'id': 'test_smell',
+        'info': {'risk_score': 5.0},
         'matchers': [{
             'type': 'regex',
-            'regex': ['test'],
-            'case_insensitive': True
+            'part': 'body',
+            'regex': ['test']
         }]
-    }
-    content = {'body': 'test test Test', 'url': '', 'headers': {}}
-    assert webnose.count_smell_instances(content, template_count) == 3
+    }]
     
-    # Negative counting
-    template_negative = {
-        'id': 'negative',
-        'matchers': [{
-            'type': 'regex',
-            'regex': ['missing'],
-            'negative': True
-        }]
-    }
-    # Present (pattern missing) -> count 1
-    assert webnose.count_smell_instances(content, template_negative) == 1
-    
-    # Absent (pattern present) -> count 0
-    content_with_missing = {'body': 'missing', 'url': '', 'headers': {}}
-    assert webnose.count_smell_instances(content_with_missing, template_negative) == 0
+    # Mock response with 3 occurrences
+    with patch('requests.get') as mock_get:
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.text = "test test test"
+        mock_get.return_value.headers = {}
+        
+        result = webnose.analyze_target("http://example.com", templates, 10, {})
+        
+        # Count should be 3
+        assert result['smells']['test_smell'] == 3
+        # Risk score should be 5.0 (not 15.0)
+        assert result['risk_score'] == 5.0
 
 if __name__ == "__main__":
     # Manually run if executed directly

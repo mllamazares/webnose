@@ -1,0 +1,14 @@
+info:
+  description: Flags pages using charset=ISO-8859-1 instead of UTF-8, common in long-unmaintained
+    apps.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - charset=[\"']?iso-8859-1[\"']?
+  case_insensitive: true
+id: iso_8859_1_charset

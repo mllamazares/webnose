@@ -1,0 +1,18 @@
+id: deserialization
+info:
+  description: Looks for keywords related to object deserialization (e.g., Java, PHP,
+    Python), a common vulnerability class.
+  author: sysrekt
+  risk_score: 9.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: body
+  regex:
+  - '["'']([a-zA-Z]:[0-9]:["'']|TzoK)'
+  - '["''](gASV|\\x80\\x04\\x95|!!python|ISFweXRob)'
+  - \$\$ND_FUNC\$\$
+  - '["''](rO0|ck8w|ACED0005|\\xAC\\xED\\x00\\x05|x-java-serialized-object|H4sIA|1F8B0800|\\x1F\\x8B\\x08\\x00)'
+  - '["''](AAEAAAD/////|TypeObject|\$type:)'
+  case_insensitive: true

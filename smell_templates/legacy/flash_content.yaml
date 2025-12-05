@@ -1,0 +1,15 @@
+info:
+  description: Detects Flash or SWF embeds.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - \.swf
+  - <object
+  - <embed
+  case_insensitive: true
+id: flash_content

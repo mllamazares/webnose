@@ -1,0 +1,13 @@
+info:
+  description: Detects Silverlight plugin usage.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - Silverlight
+  case_insensitive: true
+id: silverlight

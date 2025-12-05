@@ -1,0 +1,14 @@
+id: vintage_DOCTYPE
+info:
+  description: Identifies older DOCTYPE declarations (e.g., HTML 4.01, XHTML 1.0),
+    suggesting legacy applications.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <!DOCTYPE\s+HTML\s+PUBLIC
+  case_insensitive: false

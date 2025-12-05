@@ -1,0 +1,14 @@
+info:
+  description: Detects tmp, old, bak, or legacy endpoints still exposed.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - misc
+matchers:
+- type: regex
+  part: url
+  regex:
+  - \.(tmp|bak|old|swp|backup)$
+  - /(test|temp|old|backup)/
+  case_insensitive: true
+id: temp_endpoints

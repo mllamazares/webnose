@@ -1,0 +1,13 @@
+info:
+  description: Detects ActiveX control identifiers.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - ActiveXObject
+  case_insensitive: true
+id: activeX

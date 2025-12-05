@@ -1,0 +1,13 @@
+info:
+  description: Detects frameset or frame tags.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - <(frameset|frame)\b
+  case_insensitive: true
+id: frameset

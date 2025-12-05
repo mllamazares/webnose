@@ -1,0 +1,14 @@
+id: event_handlers
+info:
+  description: Detects inline HTML event handlers (e.g., onclick, onmouseover), often
+    used in XSS payloads.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - on(click|change|submit|load|error)=
+  case_insensitive: false

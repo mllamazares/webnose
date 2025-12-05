@@ -1,0 +1,14 @@
+info:
+  description: Detects Apache Struts signatures or error traces.
+  author: sysrekt
+  risk_score: 5.0
+  tags:
+  - tech
+matchers:
+- type: regex
+  part: all
+  regex:
+  - \.(do|action)$
+  - org\.apache\.struts
+  case_insensitive: true
+id: struts

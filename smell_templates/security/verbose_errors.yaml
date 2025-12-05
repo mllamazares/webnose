@@ -1,0 +1,13 @@
+info:
+  description: Detects verbose runtime error messages.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: body
+  regex:
+  - (Exception in thread|SQL syntax|ORA-\d+|Syntax error|Unclosed quotation mark)
+  case_insensitive: true
+id: verbose_errors

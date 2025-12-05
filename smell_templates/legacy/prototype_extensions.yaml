@@ -1,0 +1,14 @@
+info:
+  description: Detects Object.prototype or Array.prototype monkey-patching patterns
+    often tied to older JS frameworks.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: body
+  regex:
+  - (Object|Array)\.prototype\.[a-zA-Z0-9_]+ =
+  case_insensitive: true
+id: prototype_extensions

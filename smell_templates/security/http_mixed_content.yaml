@@ -1,0 +1,13 @@
+info:
+  description: Identifies HTTP resources loaded on HTTPS pages.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: body
+  regex:
+  - src=[\"']http://
+  case_insensitive: true
+id: http_mixed_content

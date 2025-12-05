@@ -1,0 +1,15 @@
+info:
+  description: Detects XML-RPC endpoints or xmlrpc.php references, usually found in
+    legacy CMS or outdated API stacks.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: all
+  regex:
+  - xmlrpc\.php
+  - <methodCall>
+  case_insensitive: true
+id: xmlrpc_endpoint

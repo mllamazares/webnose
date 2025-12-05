@@ -1,0 +1,14 @@
+id: interesting_tech
+info:
+  description: Identifies various interesting technologies or frameworks based on
+    keywords.
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - tech
+matchers:
+- type: regex
+  part: url
+  regex:
+  - (\.(php|asp|cgi|pl|nsf|dll|exe|shtml|phtml|jsp|aspx|do|cfm|action|py|rb)[\W\b$]|cgi\-bin)
+  case_insensitive: false

@@ -1,0 +1,13 @@
+info:
+  description: 'Detects Access-Control-Allow-Origin: null misconfigs.'
+  author: sysrekt
+  risk_score: 5.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: header
+  regex:
+  - Access-Control-Allow-Origin:\s*null
+  case_insensitive: true
+id: cors_null

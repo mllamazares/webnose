@@ -1,0 +1,13 @@
+id: url_ip
+info:
+  description: Detects IP addresses used directly in URLs instead of domain names.
+  author: sysrekt
+  risk_score: 1.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: url
+  regex:
+  - ^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$
+  case_insensitive: true

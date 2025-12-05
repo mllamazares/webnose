@@ -1,0 +1,15 @@
+info:
+  description: Detects CFML markers like <cfoutput> or .cfm endpoints, often left
+    in older enterprise apps.
+  author: sysrekt
+  risk_score: 2.0
+  tags:
+  - legacy
+matchers:
+- type: regex
+  part: all
+  regex:
+  - <cf[a-z]+
+  - \.cfm$
+  case_insensitive: true
+id: coldfusion_markers

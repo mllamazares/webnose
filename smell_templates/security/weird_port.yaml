@@ -1,0 +1,13 @@
+id: weird_port
+info:
+  description: Flags URLs using non-standard ports (not 80 or 443).
+  author: sysrekt
+  risk_score: 3.0
+  tags:
+  - security
+matchers:
+- type: regex
+  part: url
+  regex:
+  - :(?:(?!80|443)\d+|80\d+|443\d+)
+  case_insensitive: true
