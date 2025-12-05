@@ -1,3 +1,4 @@
+id: iso_8859_1_charset
 info:
   description: Flags pages using charset=ISO-8859-1 instead of UTF-8, common in long-unmaintained
     apps.
@@ -11,4 +12,3 @@ matchers:
   regex:
   - charset=[\"']?iso-8859-1[\"']?
   case_insensitive: true
-id: iso_8859_1_charset

@@ -1,3 +1,4 @@
+id: inline_base64
 info:
   description: Flags large base64 blobs embedded in HTML or JS.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - data:[a-z]+/[a-z]+;base64,[a-zA-Z0-9+/]{50,}
   case_insensitive: true
-id: inline_base64

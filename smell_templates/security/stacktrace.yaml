@@ -1,3 +1,4 @@
+id: stacktrace
 info:
   description: Matches leaked Java, Python, Ruby, or Node stacktraces.
   author: sysrekt
@@ -11,4 +12,3 @@ matchers:
   - '(at java\.lang\.|at org\.apache\.|Traceback \(most recent call last\)|Error:
     \w+ is not defined|ReferenceError:|TypeError:)'
   case_insensitive: false
-id: stacktrace

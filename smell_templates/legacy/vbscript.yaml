@@ -1,3 +1,4 @@
+id: vbscript
 info:
   description: Detects <script language="VBScript"> blocks or VBScript identifiers,
     a strong sign of pre-HTML5 legacy code.
@@ -12,4 +13,3 @@ matchers:
   - <script[^>]+language=[\"']?vbscript[\"']?
   - 'vbscript:'
   case_insensitive: true
-id: vbscript

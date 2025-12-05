@@ -1,3 +1,4 @@
+id: http_mixed_content
 info:
   description: Identifies HTTP resources loaded on HTTPS pages.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - src=[\"']http://
   case_insensitive: true
-id: http_mixed_content

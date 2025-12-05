@@ -1,3 +1,4 @@
+id: activeX
 info:
   description: Detects ActiveX control identifiers.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - ActiveXObject
   case_insensitive: true
-id: activeX

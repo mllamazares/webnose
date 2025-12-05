@@ -1,3 +1,4 @@
+id: xmlrpc_endpoint
 info:
   description: Detects XML-RPC endpoints or xmlrpc.php references, usually found in
     legacy CMS or outdated API stacks.
@@ -12,4 +13,3 @@ matchers:
   - xmlrpc\.php
   - <methodCall>
   case_insensitive: true
-id: xmlrpc_endpoint

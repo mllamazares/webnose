@@ -1,3 +1,4 @@
+id: dotnet_viewstate
 info:
   description: Detects __VIEWSTATE or __EVENTVALIDATION fields.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - (__VIEWSTATE|__EVENTVALIDATION)
   case_insensitive: false
-id: dotnet_viewstate

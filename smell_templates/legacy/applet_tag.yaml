@@ -1,3 +1,4 @@
+id: applet_tag
 info:
   description: Detects Java applet tags.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - <applet\b
   case_insensitive: true
-id: applet_tag

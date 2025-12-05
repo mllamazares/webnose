@@ -1,3 +1,4 @@
+id: session_id_in_url
 info:
   description: Flags session identifiers embedded in URLs.
   author: sysrekt
@@ -11,4 +12,3 @@ matchers:
   - (PHPSESSID|JSESSIONID|ASPSESSIONID|SID|CFID|CFTOKEN)=
   - session_id=
   case_insensitive: true
-id: session_id_in_url

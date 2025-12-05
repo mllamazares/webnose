@@ -1,3 +1,4 @@
+id: php_errors
 info:
   description: Detects PHP warning or notice strings that surface in old deployments.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - (Fatal error:|Warning:|Parse error:|Notice:|Uncaught Error:)
   case_insensitive: true
-id: php_errors

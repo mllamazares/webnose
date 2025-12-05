@@ -1,3 +1,4 @@
+id: verbose_errors
 info:
   description: Detects verbose runtime error messages.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - (Exception in thread|SQL syntax|ORA-\d+|Syntax error|Unclosed quotation mark)
   case_insensitive: true
-id: verbose_errors

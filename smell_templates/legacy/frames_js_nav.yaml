@@ -1,3 +1,4 @@
+id: frames_js_nav
 info:
   description: Detects JavaScript accessing parent.frames or top.frames explicitly,
     common in pre-SPA navigation stacks.
@@ -11,4 +12,3 @@ matchers:
   regex:
   - (parent|top)\.frames
   case_insensitive: true
-id: frames_js_nav

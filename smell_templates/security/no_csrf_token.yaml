@@ -1,3 +1,4 @@
+id: no_csrf_token
 info:
   description: Detects forms lacking CSRF tokens.
   author: sysrekt
@@ -16,4 +17,3 @@ matchers:
   - (csrf|token|authenticity)
   case_insensitive: true
   negative: true
-id: no_csrf_token

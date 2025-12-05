@@ -1,3 +1,4 @@
+id: prototypejs
 info:
   description: Detects Prototype.js or MooTools remnants.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - (prototype\.js|mootools)
   case_insensitive: true
-id: prototypejs

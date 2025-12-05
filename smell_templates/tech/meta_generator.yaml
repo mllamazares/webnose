@@ -1,3 +1,4 @@
+id: meta_generator
 info:
   description: Detects meta generator tags revealing outdated CMS versions.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - <meta name=[\"']generator[\"'] content=
   case_insensitive: true
-id: meta_generator

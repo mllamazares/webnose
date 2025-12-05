@@ -1,3 +1,4 @@
+id: www_authenticate_basic
 info:
   description: Detects HTTP Basic Authentication prompts.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - WWW-Authenticate:\s*Basic
   case_insensitive: true
-id: www_authenticate_basic

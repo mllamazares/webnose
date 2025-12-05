@@ -1,3 +1,4 @@
+id: hidden_comments
 info:
   description: Flags comments leaking TODOs, debug notes, or internal paths.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - <!--.*?(TODO|FIXME|DEBUG|XXX|NOTE|HACK).*?-->
   case_insensitive: true
-id: hidden_comments

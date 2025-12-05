@@ -1,3 +1,4 @@
+id: jsonp_callback
 info:
   description: Detects JSONP callback patterns, a relic from pre-CORS APIs.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - '[?&](callback|jsonp|cb|json_callback)='
   case_insensitive: true
-id: jsonp_callback

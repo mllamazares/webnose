@@ -1,3 +1,4 @@
+id: temp_endpoints
 info:
   description: Detects tmp, old, bak, or legacy endpoints still exposed.
   author: sysrekt
@@ -11,4 +12,3 @@ matchers:
   - \.(tmp|bak|old|swp|backup)$
   - /(test|temp|old|backup)/
   case_insensitive: true
-id: temp_endpoints

@@ -1,3 +1,4 @@
+id: flash_content
 info:
   description: Detects Flash or SWF embeds.
   author: sysrekt
@@ -12,4 +13,3 @@ matchers:
   - <object
   - <embed
   case_insensitive: true
-id: flash_content

@@ -1,3 +1,4 @@
+id: jquery_ui
 info:
   description: Detects old jQuery UI assets tied to legacy widgets.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - jquery-ui
   case_insensitive: true
-id: jquery_ui

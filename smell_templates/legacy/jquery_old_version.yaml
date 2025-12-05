@@ -1,3 +1,4 @@
+id: jquery_old_version
 info:
   description: Detects outdated jQuery versions.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - jquery-[1-2]\.\d+(\.\d+)?(\.min)?\.js
   case_insensitive: true
-id: jquery_old_version

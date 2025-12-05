@@ -1,3 +1,4 @@
+id: weird_mime
 info:
   description: Identifies incorrect MIME types returned by older servers.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - 'Content-Type: (?!text/|application/|image/|multipart/|font/|audio/|video/)'
   case_insensitive: true
-id: weird_mime

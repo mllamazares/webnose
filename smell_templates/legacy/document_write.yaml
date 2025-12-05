@@ -1,3 +1,4 @@
+id: document_write
 info:
   description: Detects document.write usage.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - document\.write
   case_insensitive: true
-id: document_write

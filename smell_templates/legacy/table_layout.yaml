@@ -1,3 +1,4 @@
+id: table_layout
 info:
   description: Detects layout built with nested tables.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - <table
   case_insensitive: true
-id: table_layout

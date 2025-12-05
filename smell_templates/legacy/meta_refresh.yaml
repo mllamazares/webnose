@@ -1,3 +1,4 @@
+id: meta_refresh
 info:
   description: Detects meta refresh redirects.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - <meta http-equiv=[\"']refresh[\"']
   case_insensitive: true
-id: meta_refresh

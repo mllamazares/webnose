@@ -1,3 +1,4 @@
+id: unencrypted_form
 info:
   description: Detects forms submitting over HTTP.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - <form[^>]*action=[\"']http://
   case_insensitive: true
-id: unencrypted_form

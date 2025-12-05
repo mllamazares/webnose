@@ -1,3 +1,4 @@
+id: coldfusion_markers
 info:
   description: Detects CFML markers like <cfoutput> or .cfm endpoints, often left
     in older enterprise apps.
@@ -12,4 +13,3 @@ matchers:
   - <cf[a-z]+
   - \.cfm$
   case_insensitive: true
-id: coldfusion_markers

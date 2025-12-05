@@ -1,3 +1,4 @@
+id: cors_null
 info:
   description: 'Detects Access-Control-Allow-Origin: null misconfigs.'
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - Access-Control-Allow-Origin:\s*null
   case_insensitive: true
-id: cors_null

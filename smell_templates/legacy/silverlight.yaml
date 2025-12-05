@@ -1,3 +1,4 @@
+id: silverlight
 info:
   description: Detects Silverlight plugin usage.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - Silverlight
   case_insensitive: true
-id: silverlight

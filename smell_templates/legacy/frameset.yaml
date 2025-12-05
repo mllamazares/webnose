@@ -1,3 +1,4 @@
+id: frameset
 info:
   description: Detects frameset or frame tags.
   author: sysrekt
@@ -10,4 +11,3 @@ matchers:
   regex:
   - <(frameset|frame)\b
   case_insensitive: true
-id: frameset

@@ -1,3 +1,4 @@
+id: old_meta_cache
 info:
   description: Flags meta HTTP-EQUIV cache-control tags that were used as a workaround
     before proper cache headers.
@@ -11,4 +12,3 @@ matchers:
   regex:
   - http-equiv=[\"']?Cache-Control[\"']?
   case_insensitive: true
-id: old_meta_cache

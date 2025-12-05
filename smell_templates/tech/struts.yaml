@@ -1,3 +1,4 @@
+id: struts
 info:
   description: Detects Apache Struts signatures or error traces.
   author: sysrekt
@@ -11,4 +12,3 @@ matchers:
   - \.(do|action)$
   - org\.apache\.struts
   case_insensitive: true
-id: struts

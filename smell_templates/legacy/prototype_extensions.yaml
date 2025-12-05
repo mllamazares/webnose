@@ -1,3 +1,4 @@
+id: prototype_extensions
 info:
   description: Detects Object.prototype or Array.prototype monkey-patching patterns
     often tied to older JS frameworks.
@@ -11,4 +12,3 @@ matchers:
   regex:
   - (Object|Array)\.prototype\.[a-zA-Z0-9_]+ =
   case_insensitive: true
-id: prototype_extensions

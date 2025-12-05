@@ -1,3 +1,4 @@
+id: legacy_css_filters
 info:
   description: Detects old CSS filter syntax like filter:alpha(opacity=...), used
     mostly for IE6 to IE8 hacks.
@@ -11,4 +12,3 @@ matchers:
   regex:
   - filter:\s*alpha\(opacity=
   case_insensitive: true
-id: legacy_css_filters
