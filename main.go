@@ -49,6 +49,9 @@ func main() {
 
 	flag.Parse()
 
+	// Redirect all color output to stderr
+	color.Output = os.Stderr
+
 	if !*silent {
 		fmt.Fprintln(os.Stderr, BANNER)
 	}
